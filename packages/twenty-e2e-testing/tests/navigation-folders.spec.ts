@@ -21,10 +21,15 @@ test.describe('Navigation folders', () => {
     await page.keyboard.press('ControlOrMeta+a');
     await page.keyboard.type(folderName);
     await page.keyboard.press('Enter');
+    await expect(page.getByText(folderName, { exact: true })).toBeVisible();
 
     await page.getByRole('button', { name: 'Save', exact: true }).click();
     await expect(page.getByText('Layout customization')).not.toBeVisible();
 
+    await page.getByText('Workspace', { exact: true }).hover();
+    await page.getByRole('button', { name: 'Edit navigation' }).click();
     await expect(page.getByText(folderName, { exact: true })).toBeVisible();
+    await page.getByRole('button', { name: 'Cancel', exact: true }).click();
+    await expect(page.getByText('Layout customization')).not.toBeVisible();
   });
 });
