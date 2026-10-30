@@ -50,7 +50,11 @@ test.describe('Record filters', () => {
 
     await openFilterDropdown(page);
     await page.getByPlaceholder('Search fields').fill('Employees');
-    await page.getByText('Employees', { exact: true }).last().click();
+    await page
+      .getByRole('listbox')
+      .getByText('Employees', { exact: true })
+      .first()
+      .click();
 
     const valueInput = page.getByPlaceholder('Employees');
     await expect(valueInput).toBeVisible();
@@ -60,7 +64,7 @@ test.describe('Record filters', () => {
       .getByText('Is', { exact: true })
       .click();
     await page
-      .getByRole('dialog', { name: 'Operand' })
+      .getByRole('dialog')
       .getByRole('button', { name: 'Is not', exact: true })
       .click();
 
@@ -110,8 +114,9 @@ test.describe('Record filters', () => {
     await expect(advancedFilter).toBeVisible();
     await advancedFilter.getByText('Name', { exact: true }).click();
 
-    const fieldPicker = page.getByRole('dialog', { name: 'Select field' });
-    await fieldPicker.getByPlaceholder('Search fields').fill('Amount');
+    const fieldSearch = page.getByRole('searchbox', { name: 'Search fields' });
+    const fieldPicker = page.getByRole('dialog').filter({ has: fieldSearch });
+    await fieldSearch.fill('Amount');
     await fieldPicker.getByText('Amount', { exact: true }).first().click();
     await fieldPicker.getByText('Currency', { exact: true }).click();
 
@@ -120,7 +125,7 @@ test.describe('Record filters', () => {
       isRecordQueryFilteringOn(response, 'amount'),
     );
     await page
-      .getByRole('dialog', { name: 'Select operand' })
+      .getByRole('dialog')
       .getByText('Is not empty', { exact: true })
       .click();
     await filteredQuery;
