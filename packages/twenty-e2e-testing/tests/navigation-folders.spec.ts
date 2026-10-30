@@ -25,7 +25,6 @@ test.describe('Navigation folders', () => {
     await page.getByRole('button', { name: 'Save', exact: true }).click();
     await expect(page.getByText('Layout customization')).not.toBeVisible();
 
-    await page.reload();
     await expect(page.getByText(folderName, { exact: true })).toBeVisible();
   });
 });

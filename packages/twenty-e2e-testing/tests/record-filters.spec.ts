@@ -118,7 +118,10 @@ test.describe('Record filters', () => {
     const fieldPicker = page.getByRole('dialog').filter({ has: fieldSearch });
     await fieldSearch.fill('Amount');
     await fieldPicker.getByText('Amount', { exact: true }).first().click();
-    await fieldPicker.getByText('Currency', { exact: true }).click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: 'Currency', exact: true })
+      .click();
 
     await advancedFilter.getByText('Is', { exact: true }).click();
     const filteredQuery = page.waitForResponse((response) =>
