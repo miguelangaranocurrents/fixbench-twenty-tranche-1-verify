@@ -13,7 +13,7 @@ test.describe('Navigation folders', () => {
     await page.getByRole('button', { name: 'Edit navigation' }).click();
     await expect(page.getByText('Layout customization')).toBeVisible();
 
-    await page.getByRole('button', { name: 'Add', exact: true }).click();
+    await page.locator('button[aria-label="Add"]').click();
     await page.getByText('Folder', { exact: true }).click();
 
     const nameInput = page.locator('input:focus');

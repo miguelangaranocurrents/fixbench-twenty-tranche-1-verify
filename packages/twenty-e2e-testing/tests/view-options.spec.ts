@@ -27,6 +27,14 @@ test.describe('View options', () => {
     const nameInput = page.getByRole('listbox').getByRole('textbox').first();
     await expect(nameInput).toHaveValue(viewName);
 
+    page.on('response', async (r) => {
+      const body = r.request().postData() ?? '';
+      if (/UpdateView/.test(body)) {
+        console.log('DEBUG req', body.slice(0, 400));
+        console.log('DEBUG res', (await r.text().catch(() => '')).slice(0, 400));
+      }
+    });
+    page.on('console', (m) => { if (m.type() === 'error') console.log('DEBUG console', m.text().slice(0, 300)); });
     const viewUpdated = page.waitForResponse(
       (response) =>
         /"operationName":\s*"UpdateView"/.test(
@@ -37,6 +45,9 @@ test.describe('View options', () => {
     await nameInput.press('Enter');
     await viewUpdated;
     await page.waitForTimeout(1500);
+    // DEBUG
+    console.log('DEBUG region', await page.getByRole('region', { name: 'Notifications' }).innerHTML());
+    console.log('DEBUG statuses', await page.locator('[role="status"], [role="alert"]').allInnerTexts());
 
     await expect(
       page
